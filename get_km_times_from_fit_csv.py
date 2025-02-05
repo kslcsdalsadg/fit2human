@@ -1,6 +1,7 @@
 import fit2human
 
 import json
+import sys
 import os
 
 def get_human_time(time):
