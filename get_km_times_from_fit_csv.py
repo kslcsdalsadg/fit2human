@@ -33,16 +33,14 @@ def main():
                     lap_times.append(lap['total_elapsed_time'])
             if len(lap_times) >= len(data['lap_mesgs']) - 1:
                 print()
-                total_time = 0
                 for (i, lap_time) in enumerate(lap_times):
                     print('KM %d:\t\t\t\t%s' % (i + 1, get_human_time(lap_time)))
-                    total_time = total_time + lap_time
-                print('\nAverage time per KM:\t\t%s\n' % (get_human_time(total_time / len(lap_times))))
                 total_time = 0
+                print()
                 for (i, lap_time) in enumerate(lap_times):
-                    if (i > 0) and (i % 5 == 0): print('Average time per %02d KMs:\t%s' % (i, get_human_time(total_time)))
+                    if (i > 0) and (i % 5 == 0): print('Time per %02d KMs:\t\t%s (%s per KM)' % (i, get_human_time(total_time), get_human_time(total_time / i)))
                     total_time = total_time + lap_time
-                print('\nTotal time per %d KMs\t\t%s\n' % (len(lap_times), get_human_time(total_time)))
+                print('\nTime per %d KMs\t\t\t%s (%s per KM)\n' % (len(lap_times), get_human_time(total_time), get_human_time(total_time / len(lap_times))))
             else:
                 print('Lap times aren\'t valids')
 
