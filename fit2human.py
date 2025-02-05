@@ -16,7 +16,7 @@ def get_serializable(value):
     if isinstance(value, datetime.datetime): return value.isoformat()
     return value
 
-def get_json(object):
+def get_json(data):
     return json.dumps(data, default = get_serializable, indent = 4)
 
 def get_csv(object):
@@ -65,20 +65,19 @@ def get_data(messages):
         data[key] = key_data
     return data
 
-if len(sys.argv) < 2:
-    print('No input file received')
-else:
-    source = sys.argv[1]
-    result_type = sys.argv[2].lower() if len(sys.argv) == 3 else None
-
-    stream = Stream.from_file(sys.argv[1])
+def main(source, result_type):
+    stream = Stream.from_file(source)
     decoder = Decoder(stream)
     messages, errors = decoder.read()
-
     if errors:
         print(errors)
+        return None
     else:
         data = get_data(messages)
         if result_type == 'json': data = get_json(data)
         else: data = get_csv(data)
-        print(data)
+        return(data)
+            
+if __name__ == "__main__":
+    if len(sys.argv) < 2: print('No input file received')
+    else: print(main(sys.argv[1], sys.argv[2].lower() if len(sys.argv) == 3 else None))
