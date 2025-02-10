@@ -4,6 +4,10 @@ import json
 import sys
 import os
 
+def get_human_distance(distance):
+    if distance > 1000: return '%d.%d Km' % (int(distance / 1000), int(distance % 1000))
+    return '%d m' % (distance)    
+    
 def get_human_time(time):
     if time > 60 * 60:
         hours = int(time / (60 * 60))
@@ -18,8 +22,11 @@ def get_hr_interval(min, max):
 
 
 def print_kms(data):
+    total_distance = 0
+    for lap in data['lap_mesgs']: total_distance = total_distance + lap['total_distance']
+    print("Total distance:\t\t%s\n" % (get_human_distance(total_distance)) )   
     lap_times = []
-    print("SPEED\n")
+    print("SPEED")
     for lap in data['lap_mesgs']:
         if lap['total_distance'] != 1000:
             break
@@ -28,13 +35,13 @@ def print_kms(data):
     if len(lap_times) >= len(data['lap_mesgs']) - 1:
         print()
         for (i, lap_time) in enumerate(lap_times):
-            print('KM %d:\t\t\t\t%s' % (i + 1, get_human_time(lap_time)))
+            print('Km %d:\t\t\t%s' % (i + 1, get_human_time(lap_time)))
         total_time = 0
         print()
         for (i, lap_time) in enumerate(lap_times):
-            if (i > 0) and (i % 5 == 0): print('Time per %02d KMs:\t\t%s (%s per KM)' % (i, get_human_time(total_time), get_human_time(total_time / i)))
+            if (i > 0) and (i % 5 == 0): print('Time per %02d Km:\t\t%s (%s per Km)' % (i, get_human_time(total_time), get_human_time(total_time / i)))
             total_time = total_time + lap_time
-        print('\nTime per %d KMs\t\t\t%s (%s per KM)\n' % (len(lap_times), get_human_time(total_time), get_human_time(total_time / len(lap_times))))
+        print('\nTime per %d Km\t\t%s (%s per Km)\n' % (len(lap_times), get_human_time(total_time), get_human_time(total_time / len(lap_times))))
     else:
         print('Lap times aren\'t valids')
 
