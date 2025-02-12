@@ -6,8 +6,8 @@ import os
 
 def get_human_distance(distance):
     if distance > 1000: return '%d.%d Km' % (int(distance / 1000), int(distance % 1000))
-    return '%d m' % (distance)    
-    
+    return '%d m' % (distance)
+
 def get_human_time(time):
     if time > 60 * 60:
         hours = int(time / (60 * 60))
@@ -24,7 +24,7 @@ def get_hr_interval(min, max):
 def print_kms(data):
     total_distance = 0
     for lap in data['lap_mesgs']: total_distance = total_distance + lap['total_distance']
-    print("Total distance:\t\t%s\n" % (get_human_distance(total_distance)) )   
+    print("Total distance:\t\t%s\n" % (get_human_distance(total_distance)) )
     lap_times = []
     print("SPEED")
     for lap in data['lap_mesgs']:
@@ -49,14 +49,15 @@ def print_hr(data):
     print("HEART RATE\n")
     for subdata in data['time_in_zone_mesgs']:
         if subdata['reference_mesg'] == 'session':
-            total_time, hr_times, hr_limits = 0, [ 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0 ]
+            total_time, hr_times, hr_limits = 0, [ 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0 ]
             for i in range(0, len(subdata['hr_zone_high_boundary'])):
                 total_time = total_time + subdata['time_in_hr_zone'][i]
-                j = i if i < len(hr_times) else len(hr_times -1)
+                j = max(0, min(i - 1, len(hr_times) - 1))
                 hr_times[j] = hr_times[j] + subdata['time_in_hr_zone'][i]
                 hr_limits[j] = subdata['hr_zone_high_boundary'][i]
-            for (i, hr_time) in enumerate(hr_times):
-                print('Time in Zone %d (%s):%s\t\t%s (%.02f%%)' % (i, get_hr_interval(hr_limits[i - 1] if i > 0 else 0, hr_limits[i] if i + 1 < len(hr_limits) else 0), '' if i > 0 and i + 1 < len(hr_limits) else '  ', get_human_time(hr_time), hr_time * 100 / total_time))
+            for i in range (0, len(hr_times)):
+                hr_time = hr_times[i]
+                print('Time in Zone %d (%s):%s\t\t%s (%.02f%%)' % (i + 1, get_hr_interval(hr_limits[i - 1] if i > 0 else 0, hr_limits[i] if i + 1 < len(hr_limits) else 0), '' if i > 0 and i + 1 < len(hr_limits) else '  ', get_human_time(hr_time), hr_time * 100 / total_time))
             return
     print('HR times aren\'t valids')
 
