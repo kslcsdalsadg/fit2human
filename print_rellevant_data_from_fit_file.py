@@ -5,7 +5,7 @@ import sys
 import os
 
 def get_human_distance(distance):
-    if distance > 1000: return '%d.%d Km' % (int(distance / 1000), int(distance % 1000))
+    if distance > 1000: return '%d,%d Km' % (int(distance / 1000), int(distance % 1000))
     return '%d m' % (distance)
 
 def get_human_time(time):
@@ -39,9 +39,9 @@ def print_kms(data):
         total_time = 0
         print()
         for (i, lap_time) in enumerate(lap_times):
-            if (i > 0) and (i % 5 == 0): print('Time per %02d Km:\t\t%s (%s per Km)' % (i, get_human_time(total_time), get_human_time(total_time / i)))
+            if (i > 0) and (i % 5 == 0): print('Time per %02d Km:\t\t%s (%s/Km)' % (i, get_human_time(total_time), get_human_time(total_time / i)))
             total_time = total_time + lap_time
-        print('\nTime per %d Km\t\t%s (%s per Km)\n' % (len(lap_times), get_human_time(total_time), get_human_time(total_time / len(lap_times))))
+        print('\nTime per %d Km\t\t%s (%s/Km)\n' % (len(lap_times), get_human_time(total_time), get_human_time(total_time / len(lap_times))))
     else:
         print('Lap times aren\'t valids')
 
