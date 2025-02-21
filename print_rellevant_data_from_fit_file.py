@@ -1,3 +1,5 @@
+from datetime import datetime, timezone, timedelta
+
 import fit2human
 
 import json
@@ -20,6 +22,11 @@ def get_hr_interval(min, max):
     if max == 0: return 'HR higher to %d bpm' % (min)
     return 'HR from %d to %d bpm' % (min, max)
 
+def get_datetime(string):
+    return datetime.fromisoformat(string)
+
+def get_local_datetime(reference):
+    return reference.astimezone() if isinstance(reference, datetime) else get_datetime(reference).astimezone()
 
 def print_kms(data):
     total_distance = 0
@@ -75,7 +82,10 @@ def main():
         else:
             with open(source) as json_file: data = json.load(json_file)
         if data:
+            begin_datetime = get_datetime(data['activity_mesgs'][0]['timestamp'])
             print('Data from "%s"\n' % (source))
+            print('Begin datetime:\t\t%s' % (get_local_datetime(begin_datetime).strftime('%d-%m-%Y %H:%M')))
+            print('End datetime:\t\t%s\n' % (get_local_datetime(begin_datetime + timedelta(seconds = int(data['activity_mesgs'][0]['total_timer_time']))).strftime('%d-%m-%Y %H:%M')))
             print_kms(data)
             print_hr(data)
 
