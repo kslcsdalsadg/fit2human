@@ -35,11 +35,9 @@ def print_kms(data):
     lap_times = []
     print("SPEED")
     for lap in data['lap_mesgs']:
-        if lap['total_distance'] != 1000:
-            break
-        else:
-            lap_times.append(lap['total_elapsed_time'])
-    if len(lap_times) >= len(data['lap_mesgs']) - 1:
+        if lap['total_distance'] != 1000: break
+        lap_times.append(lap['total_elapsed_time'])
+    if len(lap_times) > 0:
         print()
         for (i, lap_time) in enumerate(lap_times):
             print('Km %d:\t\t\t%s' % (i + 1, get_human_time(lap_time)))
@@ -85,7 +83,8 @@ def main():
             begin_datetime = get_datetime(data['activity_mesgs'][0]['timestamp'])
             print('Data from "%s"\n' % (source))
             print('Begin datetime:\t\t%s' % (get_local_datetime(begin_datetime).strftime('%d-%m-%Y %H:%M')))
-            print('End datetime:\t\t%s\n' % (get_local_datetime(begin_datetime + timedelta(seconds = int(data['activity_mesgs'][0]['total_timer_time']))).strftime('%d-%m-%Y %H:%M')))
+            print('End datetime:\t\t%s' % (get_local_datetime(begin_datetime + timedelta(seconds = int(data['activity_mesgs'][0]['total_timer_time']))).strftime('%d-%m-%Y %H:%M')))
+            print('Time running:\t\t%s\n' % (get_human_time(data['activity_mesgs'][0]['total_timer_time'])))
             print_kms(data)
             print_hr(data)
 
